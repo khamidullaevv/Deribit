@@ -22,7 +22,6 @@ def fetch_deribit_prices(self):
     try:
         price_service = PriceService()
         
-        # <- Здесь убираем asyncio.run
         result = price_service.fetch_and_save_prices()
         
         successful = sum(1 for v in result.values() if v is not None)
@@ -62,18 +61,7 @@ def fetch_deribit_prices(self):
     time_limit=60,
 )
 def cleanup_old_prices(self, days_to_keep: int = 90):
-    """
-    Periodic task to delete old price records.
     
-    Keeps only recent data to manage database size.
-    
-    Args:
-        self: Task instance
-        days_to_keep: Number of days of historical data to keep
-        
-    Returns:
-        Dictionary with deletion count
-    """
     try:
         from .models import Price
         from datetime import timedelta
@@ -81,7 +69,6 @@ def cleanup_old_prices(self, days_to_keep: int = 90):
         cutoff_date = timezone.now() - timedelta(days=days_to_keep)
         cutoff_timestamp = int(cutoff_date.timestamp())
         
-        # Delete old records
         deleted_count, _ = Price.objects.filter(
             timestamp__lt=cutoff_timestamp
         ).delete()

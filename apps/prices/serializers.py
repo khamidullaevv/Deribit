@@ -1,17 +1,10 @@
-"""
-Serializers for Price API endpoints.
-"""
+
 
 from rest_framework import serializers
 from .models import Price, PriceTickerChoices
 
 
 class PriceSerializer(serializers.ModelSerializer):
-    """
-    Serializer for Price model.
-    
-    Provides clean, typed responses for API endpoints.
-    """
     
     ticker_display = serializers.CharField(
         source='get_ticker_display',
@@ -31,18 +24,13 @@ class PriceSerializer(serializers.ModelSerializer):
         read_only_fields = fields
     
     def to_representation(self, instance):
-        """
-        Override to provide consistent decimal representation.
-        """
+        
         data = super().to_representation(instance)
         data['price'] = str(instance.price)
         return data
 
 
 class TickerFilterSerializer(serializers.Serializer):
-    """
-    Serializer for validating ticker query parameter.
-    """
     
     ticker = serializers.ChoiceField(
         choices=PriceTickerChoices.choices,
@@ -52,10 +40,7 @@ class TickerFilterSerializer(serializers.Serializer):
 
 
 class DateRangeFilterSerializer(serializers.Serializer):
-    """
-    Serializer for validating date range query parameters.
-    """
-    
+   
     ticker = serializers.ChoiceField(
         choices=PriceTickerChoices.choices,
         required=True
@@ -70,9 +55,7 @@ class DateRangeFilterSerializer(serializers.Serializer):
     )
     
     def validate(self, data):
-        """
-        Validate that end_date is after start_date.
-        """
+       
         if data['end_date'] <= data['start_date']:
             raise serializers.ValidationError(
                 "end_date must be after start_date"
@@ -81,19 +64,13 @@ class DateRangeFilterSerializer(serializers.Serializer):
 
 
 class PriceListResponseSerializer(serializers.Serializer):
-    """
-    Serializer for list response format.
-    """
     
     count = serializers.IntegerField()
     results = PriceSerializer(many=True)
 
 
 class PriceDetailResponseSerializer(serializers.Serializer):
-    """
-    Serializer for single price detail response.
-    """
-    
+   
     ticker = serializers.CharField()
     price = serializers.DecimalField(max_digits=20, decimal_places=2)
     timestamp = serializers.IntegerField()
@@ -101,9 +78,6 @@ class PriceDetailResponseSerializer(serializers.Serializer):
 
 
 class ErrorResponseSerializer(serializers.Serializer):
-    """
-    Serializer for error response format.
-    """
     
     error = serializers.CharField()
     details = serializers.JSONField(required=False)

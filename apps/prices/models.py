@@ -1,27 +1,15 @@
-"""
-Price models for Deribit price tracker.
-"""
+
 
 from django.db import models
 from django.core.validators import MinValueValidator
 
 
 class PriceTickerChoices(models.TextChoices):
-    """Available cryptocurrency tickers."""
     BTC_USD = 'btc_usd', 'Bitcoin USD'
     ETH_USD = 'eth_usd', 'Ethereum USD'
 
 
 class Price(models.Model):
-    """
-    Model to store historical price data from Deribit.
-    
-    Attributes:
-        ticker: The cryptocurrency ticker (btc_usd or eth_usd)
-        price: The price value in USD
-        timestamp: Unix timestamp of the price
-        created_at: When this record was created in the database
-    """
     
     ticker = models.CharField(
         max_length=20,

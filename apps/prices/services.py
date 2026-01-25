@@ -1,6 +1,4 @@
-"""
-Services layer for price management and Deribit API interaction.
-"""
+
 
 import logging
 import time
@@ -15,15 +13,8 @@ from .models import Price, PriceTickerChoices
 logger = logging.getLogger(__name__)
 
 
-# =========================
-# Deribit API client
-# =========================
 class DeribitAPIClient:
-    """
-    Synchronous client for Deribit REST API.
-    Used inside Celery tasks (safe & simple).
-    """
-
+   
     DEFAULT_TICKERS = ("btc_usd", "eth_usd")
 
     def __init__(
@@ -35,12 +26,7 @@ class DeribitAPIClient:
         self.timeout = timeout
 
     def get_index_price(self, ticker: str) -> Optional[Decimal]:
-        """
-        Fetch index price for a single ticker from Deribit.
-
-        Example:
-        GET /public/get_index_price?index_name=btc_usd
-        """
+      
         url = f"{self.base_url}/public/get_index_price"
         params = {"index_name": ticker}
 
@@ -62,27 +48,15 @@ class DeribitAPIClient:
             return None
 
 
-# =========================
-# Price business service
-# =========================
-class PriceService:
-    """
-    Business logic layer for prices.
 
-    Responsibilities:
-    - Fetch prices from Deribit
-    - Save prices to DB
-    - Query prices
-    """
+class PriceService:
+    
 
     def __init__(self, client: Optional[DeribitAPIClient] = None):
         self.client = client or DeribitAPIClient()
 
-    # ---------- SAVE ----------
     def save_price(self, ticker: str, price: Decimal, timestamp: int) -> Price:
-        """
-        Save a single price record.
-        """
+       
         if ticker not in dict(PriceTickerChoices.choices):
             raise ValueError(f"Invalid ticker: {ticker}")
 
@@ -96,10 +70,6 @@ class PriceService:
         self,
         tickers: Tuple[str, ...] = DeribitAPIClient.DEFAULT_TICKERS,
     ) -> Dict[str, Optional[Price]]:
-        """
-        Fetch prices from Deribit and save them to DB.
-        Used by Celery beat (every minute).
-        """
         results: Dict[str, Optional[Price]] = {}
         timestamp = int(time.time())
 
@@ -125,7 +95,6 @@ class PriceService:
 
         return results
 
-    # ---------- READ ----------
     def get_all_prices(self, ticker: str):
         return Price.objects.filter(
             ticker=ticker

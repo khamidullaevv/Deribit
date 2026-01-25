@@ -1,13 +1,5 @@
-"""
-Production configuration overrides.
-
-This file contains settings that should be applied in production.
-Import and use these settings in your production deployment.
-"""
-
 import os
 
-# Security
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -18,7 +10,6 @@ SECURE_CONTENT_SECURITY_POLICY = {
     "style-src": ("'self'", "'unsafe-inline'"),
 }
 
-# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -34,7 +25,6 @@ DATABASES = {
     }
 }
 
-# Cache
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -48,7 +38,6 @@ CACHES = {
     }
 }
 
-# Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -81,17 +70,14 @@ LOGGING = {
     },
 }
 
-# Celery
-CELERY_TASK_TIME_LIMIT = 600  # 10 minutes
-CELERY_TASK_SOFT_TIME_LIMIT = 540  # 9 minutes
+CELERY_TASK_TIME_LIMIT = 600  
+CELERY_TASK_SOFT_TIME_LIMIT = 540  
 CELERY_WORKER_PREFETCH_MULTIPLIER = 4
 CELERY_WORKER_MAX_TASKS_PER_CHILD = 1000
 
-# Performance
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
-FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  
 
-# API Configuration
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100,

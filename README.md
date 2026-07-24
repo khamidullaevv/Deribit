@@ -1,4 +1,4 @@
-# Deribit Price Tracker API
+# Deribit API Tracker USDT and more
 
 Production-ready Django REST Framework API for tracking cryptocurrency prices from Deribit exchange.
 
